@@ -1,41 +1,37 @@
+using MongoDB.Driver;
 using TasksService.Domain.Entities;
 using TasksService.Domain.Interfaces;
+using TasksService.Infrastructure.Data;
 
 namespace TasksService.Infrastructure.Repositories;
 
-public class ToDoRepository : IToDoRepository
+public class ToDoRepository(MongoDbContext context) : IToDoRepository
 {
-    private readonly List<ToDoItem> _todoItems = [];
+    private readonly IMongoCollection<ToDoItem> _todoItems = context.ToDoItems;
 
-    public Task<List<ToDoItem>> GetAllAsync(string userId)
+    public async Task<List<ToDoItem>> GetAllAsync(string userId)
     {
-        return Task.FromResult(_todoItems.Where(i => i.UserId == userId).ToList());
+        return await _todoItems.Find(item => item.UserId == userId).ToListAsync();
     }
 
-    public Task<ToDoItem?> GetByIdAsync(string id, string userId)
+    public async Task<ToDoItem?> GetByIdAsync(string id, string userId)
     {
-        return Task.FromResult(_todoItems.FirstOrDefault(i => i.Id == id && i.UserId == userId));
+        return await _todoItems.Find(item => item.Id == id && item.UserId == userId).FirstOrDefaultAsync();
     }
 
-    public Task<ToDoItem> CreateAsync(ToDoItem item)
+    public async Task<ToDoItem> CreateAsync(ToDoItem item)
     {
-        _todoItems.Add(item);
-        return Task.FromResult(item);
+        await _todoItems.InsertOneAsync(item);
+        return item;
     }
 
-    public Task UpdateAsync(string id, ToDoItem item)
+    public async Task UpdateAsync(string id, ToDoItem item)
     {
-        _todoItems.Add(item);
-        return Task.CompletedTask;
+        await _todoItems.ReplaceOneAsync(i => i.Id == id, item);
     }
 
-    public Task DeleteAsync(string id, string userId)
+    public async Task DeleteAsync(string id, string userId)
     {
-        var item = _todoItems.FirstOrDefault(i => i.Id == id && i.UserId == userId);
-        if (item != null)
-        {
-            _todoItems.Remove(item);
-        }
-        return Task.CompletedTask;
+        await _todoItems.DeleteOneAsync(i => i.Id == id && i.UserId == userId);
     }
 }

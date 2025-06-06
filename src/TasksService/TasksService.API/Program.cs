@@ -1,7 +1,9 @@
 using Microsoft.OpenApi.Models;
+using TasksService.API.Configuration;
 using TasksService.Application.Interfaces;
 using TasksService.Application.Services;
 using TasksService.Domain.Interfaces;
+using TasksService.Infrastructure.Data;
 using TasksService.Infrastructure.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +17,12 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddScoped<IToDoService, ToDoServiceImpl>();
 builder.Services.AddScoped<IToDoRepository, ToDoRepository>();
+builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
+builder.Services.AddSingleton<MongoDbContext>(sp =>
+{
+    var settings = builder.Configuration.GetSection("MongoDbSettings").Get<MongoDbSettings>();
+    return new MongoDbContext(settings!.ConnectionString, settings.DatabaseName);
+});
 
 var app = builder.Build();
 
