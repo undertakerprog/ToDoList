@@ -9,7 +9,7 @@ namespace TasksService.API.Controllers;
 public class ToDoController(IToDoService toDoService) : ControllerBase
 {
     [HttpGet]
-    public async Task<IActionResult> GetAll()   
+    public async Task<IActionResult> GetAll()
     {
         var userId = "test-user";
         var items = await toDoService.GetAllAsync(userId);
@@ -21,13 +21,11 @@ public class ToDoController(IToDoService toDoService) : ControllerBase
     {
         var userId = "test-user";
         var item = await toDoService.GetByIdAsync(id, userId);
-        if (item == null!)
-            return NotFound();
         return Ok(item);
     }
-    
+
     [HttpPost]
-    public async Task<IActionResult> Create([FromBody] ToDoItemDto item)
+    public async Task<IActionResult> Create([FromBody] ToDoItemCreateDto item)
     {
         var userId = "test-user";
         var createdItem = await toDoService.CreateAsync(item, userId);

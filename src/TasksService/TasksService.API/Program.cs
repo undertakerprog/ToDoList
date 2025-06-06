@@ -1,7 +1,10 @@
 using Microsoft.OpenApi.Models;
 using TasksService.API.Configuration;
 using TasksService.Application.Interfaces;
-using TasksService.Application.Services;
+using TasksService.Application.UseCases;
+using TasksService.Application.UseCases.CommandHandlers;
+using TasksService.Application.UseCases.Interfaces;
+using TasksService.Application.UseCases.QueryHandlers;
 using TasksService.Domain.Interfaces;
 using TasksService.Infrastructure.Data;
 using TasksService.Infrastructure.Repositories;
@@ -15,7 +18,14 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "TasksService API", Version = "v1" });
 });
 
-builder.Services.AddScoped<IToDoService, ToDoServiceImpl>();
+builder.Services.AddScoped<IToDoService, ToDoService>();
+builder.Services.AddScoped<ICommandHandler, CommandDispatcher>();
+builder.Services.AddScoped<IQueryHandler, QueryDispatcher>();
+builder.Services.AddScoped<CreateToDoItemCommandHandler>();
+builder.Services.AddScoped<UpdateToDoItemCommandHandler>();
+builder.Services.AddScoped<DeleteToDoItemCommandHandler>();
+builder.Services.AddScoped<GetAllToDoItemsQueryHandler>();
+builder.Services.AddScoped<GetToDoItemByIdQueryHandler>();
 builder.Services.AddScoped<IToDoRepository, ToDoRepository>();
 builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
 builder.Services.AddSingleton<MongoDbContext>(sp =>
