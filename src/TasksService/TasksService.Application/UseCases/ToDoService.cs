@@ -1,3 +1,4 @@
+using FluentValidation;
 using TasksService.Application.DTOs;
 using TasksService.Application.Interfaces;
 using TasksService.Application.UseCases.Commands;
@@ -6,7 +7,9 @@ using TasksService.Application.UseCases.Queries;
 
 namespace TasksService.Application.UseCases;
 
-public class ToDoService(ICommandHandler commandHandler, IQueryHandler queryHandler) : IToDoService
+public class ToDoService(ICommandHandler commandHandler, 
+    IQueryHandler queryHandler, 
+    IValidator<ToDoItemCreateDto> createDtoValidator) : IToDoService
 {
     public Task<List<ToDoItemDto>> GetAllAsync(string userId)
     {
@@ -22,6 +25,10 @@ public class ToDoService(ICommandHandler commandHandler, IQueryHandler queryHand
 
     public async Task<ToDoItemDto> CreateAsync(ToDoItemCreateDto itemDto, string userId)
     {
+        var validationResult = await createDtoValidator.ValidateAsync(itemDto);
+        if (!validationResult.IsValid)
+            throw new ValidationException(validationResult.Errors); 
+
         var command = new CreateToDoItemCommand(itemDto, userId);
         var id = await commandHandler.Handle(command);
         return new ToDoItemDto 

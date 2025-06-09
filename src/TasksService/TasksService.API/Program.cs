@@ -1,17 +1,18 @@
+using FluentValidation;
 using Microsoft.OpenApi.Models;
+using FluentValidation.AspNetCore;
 using TasksService.API.Configuration;
-using TasksService.Application.Interfaces;
-using TasksService.Application.UseCases;
-using TasksService.Application.UseCases.CommandHandlers;
-using TasksService.Application.UseCases.Interfaces;
-using TasksService.Application.UseCases.QueryHandlers;
-using TasksService.Domain.Interfaces;
-using TasksService.Infrastructure.Data;
-using TasksService.Infrastructure.Repositories;
+using TasksService.Application.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
+
+builder.Services.AddValidatorsFromAssemblyContaining<ToDoItemCreateDtoValidator>();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {

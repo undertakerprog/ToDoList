@@ -1,8 +1,11 @@
+using FluentValidation;
+using TasksService.Application.DTOs;
 using TasksService.Application.Interfaces;
 using TasksService.Application.UseCases;
 using TasksService.Application.UseCases.CommandHandlers;
 using TasksService.Application.UseCases.Interfaces;
 using TasksService.Application.UseCases.QueryHandlers;
+using TasksService.Application.Validators;
 using TasksService.Domain.Interfaces;
 using TasksService.Infrastructure.Data;
 using TasksService.Infrastructure.Repositories;
@@ -11,7 +14,7 @@ namespace TasksService.API.Configuration;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddTaskServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddTaskServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<IToDoService, ToDoService>();
         services.AddScoped<ICommandHandler, CommandDispatcher>();
@@ -31,12 +34,13 @@ public static class ServiceCollectionExtensions
         services.AddScoped<GetToDoItemByIdQueryHandler>();
         services.AddScoped<IToDoRepository, ToDoRepository>();
         services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
-        services.AddSingleton<MongoDbContext>(sp =>
+        services.AddSingleton<MongoDbContext>(_ =>
         {
             var settings = configuration.GetSection("MongoDbSettings").Get<MongoDbSettings>();
             return new MongoDbContext(settings!.ConnectionString, settings.DatabaseName);
         });
-
-        return services;
+        
+        services.AddScoped<IValidator<ToDoItemCreateDto>, ToDoItemCreateDtoValidator>();
+        services.AddScoped<IValidator<TaskCharacteristicsDto>, TaskCharacteristicsDtoValidator>();
     }
 }
