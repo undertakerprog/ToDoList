@@ -13,7 +13,14 @@ public static class DtoMapper
             Title = item.Title,
             Description = item.Description,
             IsCompleted = item.IsCompleted,
-            CreatedAt = item.CreatedAt
+            CreatedAt = item.CreatedAt,
+            Characteristics = new TaskCharacteristicsDto
+            {
+                IsArchived = item.Characteristics.IsArchived,
+                Priority = item.Characteristics.Priority,
+                Tags = item.Characteristics.Tags,
+                Deadline = item.Characteristics.Deadline
+            }
         };
     }
 }

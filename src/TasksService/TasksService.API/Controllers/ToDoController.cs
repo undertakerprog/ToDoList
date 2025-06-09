@@ -39,6 +39,22 @@ public class ToDoController(IToDoService toDoService) : ControllerBase
         await toDoService.UpdateAsync(id, item, userId);
         return NoContent();
     }
+    
+    [HttpPatch("{id}/complete")]
+    public async Task<IActionResult> MarkAsCompleted(string id)
+    {
+        var userId = "test-user";
+        await toDoService.MarkAsCompletedAsync(id, userId);
+        return NoContent();
+    }
+
+    [HttpPatch("{id}/incomplete")]
+    public async Task<IActionResult> MarkAsIncomplete(string id)
+    {
+        var userId = "test-user";
+        await toDoService.MarkAsIncompleteAsync(id, userId);
+        return NoContent();
+    }
 
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(string id)

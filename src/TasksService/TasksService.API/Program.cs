@@ -18,21 +18,7 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "TasksService API", Version = "v1" });
 });
 
-builder.Services.AddScoped<IToDoService, ToDoService>();
-builder.Services.AddScoped<ICommandHandler, CommandDispatcher>();
-builder.Services.AddScoped<IQueryHandler, QueryDispatcher>();
-builder.Services.AddScoped<CreateToDoItemCommandHandler>();
-builder.Services.AddScoped<UpdateToDoItemCommandHandler>();
-builder.Services.AddScoped<DeleteToDoItemCommandHandler>();
-builder.Services.AddScoped<GetAllToDoItemsQueryHandler>();
-builder.Services.AddScoped<GetToDoItemByIdQueryHandler>();
-builder.Services.AddScoped<IToDoRepository, ToDoRepository>();
-builder.Services.Configure<MongoDbSettings>(builder.Configuration.GetSection("MongoDbSettings"));
-builder.Services.AddSingleton<MongoDbContext>(sp =>
-{
-    var settings = builder.Configuration.GetSection("MongoDbSettings").Get<MongoDbSettings>();
-    return new MongoDbContext(settings!.ConnectionString, settings.DatabaseName);
-});
+builder.Services.AddTaskServices(builder.Configuration);
 
 var app = builder.Build();
 

@@ -7,4 +7,5 @@ public class ToDoItemDto
     public required string Description { get; init; }
     public bool IsCompleted { get; init; }
     public DateTime CreatedAt { get; init; }
+    public TaskCharacteristicsDto Characteristics { get; init; } = new TaskCharacteristicsDto();
 }

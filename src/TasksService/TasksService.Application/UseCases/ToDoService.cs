@@ -45,4 +45,52 @@ public class ToDoService(ICommandHandler commandHandler, IQueryHandler queryHand
         var command = new DeleteToDoItemCommand(id, userId);
         return commandHandler.Handle(command);
     }
+    
+    public Task MarkAsCompletedAsync(string id, string userId)
+    {
+        var command = new MarkAsCompletedCommand(id, userId);
+        return commandHandler.Handle(command);
+    }
+
+    public Task MarkAsIncompleteAsync(string id, string userId)
+    {
+        var command = new MarkAsIncompleteCommand(id, userId);
+        return commandHandler.Handle(command);
+    }
+    
+    public Task ArchiveTaskAsync(string id, string userId)
+    {
+        var command = new ArchiveTaskCommand(id, userId);
+        return commandHandler.Handle(command);
+    }
+
+    public Task RestoreTaskAsync(string id, string userId)
+    {
+        var command = new RestoreTaskCommand(id, userId);
+        return commandHandler.Handle(command);
+    }
+
+    public Task SetPriorityAsync(string id, string userId, int priority)
+    {
+        var command = new SetPriorityCommand(id, userId, priority);
+        return commandHandler.Handle(command);
+    }
+
+    public Task AddTagAsync(string id, string userId, string tag)
+    {
+        var command = new AddTagCommand(id, userId, tag);
+        return commandHandler.Handle(command);
+    }
+    
+    public Task RemoveTagAsync(string id, string userId)
+    {
+        var command = new RemoveTagCommand(id, userId);
+        return commandHandler.Handle(command);
+    }
+
+    public Task SetDeadlineAsync(string id, string userId, DateTime? deadline)
+    {
+        var command = new SetDeadlineCommand(id, userId, deadline);
+        return commandHandler.Handle(command);
+    }
 }
