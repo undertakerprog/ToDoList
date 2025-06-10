@@ -2,7 +2,7 @@
 swagger+
 nginx-
 mongodb+
-postgresql-
+postgresql+
 swagger+
 unit-tests-
 docker-
