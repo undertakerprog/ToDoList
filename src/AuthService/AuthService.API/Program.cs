@@ -1,26 +1,12 @@
-using AuthService.Application.UseCases;
-using AuthService.Domain.Interfaces;
-using AuthService.Infrastructure.Repositories;
-using Microsoft.OpenApi.Models;
-using Microsoft.EntityFrameworkCore;
-using AuthService.Infrastructure.Data;
+using AuthService.API.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true); //change to appsetting.json
+builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true);
 
 builder.Services.AddControllers();
-builder.Services.AddScoped<RegisterUseCase>();
-builder.Services.AddScoped<LoginUseCase>();
-builder.Services.AddScoped<IAuthRepository, AuthRepository>();
 
-builder.Services.AddDbContext<AuthDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("AuthDb")));
-
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "AuthService", Version = "v1" });
-});
+builder.Services.AddAuthServices(builder.Configuration);
 
 var app = builder.Build();
 

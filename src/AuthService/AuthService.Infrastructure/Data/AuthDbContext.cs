@@ -9,6 +9,11 @@ public class AuthDbContext(DbContextOptions<AuthDbContext> options) : DbContext(
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(u => u.Id); 
+            entity.Property(u => u.Id).ValueGeneratedOnAdd(); 
+            entity.HasIndex(u => u.Email).IsUnique();
+        });
     }
 }

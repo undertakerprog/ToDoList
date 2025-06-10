@@ -5,9 +5,9 @@ using AuthService.Domain.Entities;
 using AuthService.Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
 
-namespace AuthService.Application.UseCases;
+namespace AuthService.Application.Service;
 
-public class RegisterUseCase(IAuthRepository repository, IConfiguration configuration) : IAuthService
+public class AuthService(IAuthRepository repository, IConfiguration configuration) : IAuthService
 {
     public async Task<AuthResponseDto> RegisterAsync(RegisterDto dto)
     {
@@ -16,7 +16,6 @@ public class RegisterUseCase(IAuthRepository repository, IConfiguration configur
 
         var user = new User
         {
-            Id = new Random().Next(1, 10000),
             Email = dto.Email,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
             CreatedAt = DateTime.UtcNow
@@ -27,5 +26,13 @@ public class RegisterUseCase(IAuthRepository repository, IConfiguration configur
         return new AuthResponseDto { Token = token, UserId = user.Id.ToString() };
     }
 
-    public Task<AuthResponseDto> LoginAsync(LoginDto dto) => throw new NotImplementedException();
+    public async Task<AuthResponseDto> LoginAsync(LoginDto dto)
+    {
+        var user = await repository.GetByEmailAsync(dto.Email);
+        if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
+            throw new Exception("Invalid credentials");
+
+        var token = JwtTokenHelper.GenerateJwtToken(user, configuration);
+        return new AuthResponseDto { Token = token, UserId = user.Id.ToString() };
+    }
 }
