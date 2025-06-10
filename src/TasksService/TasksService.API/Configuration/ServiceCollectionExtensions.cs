@@ -1,4 +1,5 @@
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using TasksService.Application.DTOs;
 using TasksService.Application.Interfaces;
 using TasksService.Application.UseCases;
@@ -42,5 +43,9 @@ public static class ServiceCollectionExtensions
         
         services.AddScoped<IValidator<ToDoItemCreateDto>, ToDoItemCreateDtoValidator>();
         services.AddScoped<IValidator<TaskCharacteristicsDto>, TaskCharacteristicsDtoValidator>();
+        
+        services.AddFluentValidationAutoValidation();
+        services.AddFluentValidationClientsideAdapters();
+        services.AddValidatorsFromAssemblyContaining<ToDoItemCreateDtoValidator>();
     }
 }
