@@ -1,9 +1,12 @@
 using AuthService.Application.Interfaces;
+using AuthService.Application.Validators;
 using AuthService.Domain.Interfaces;
 using AuthService.Infrastructure.Data;
 using AuthService.Infrastructure.Repositories;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
+using FluentValidation.AspNetCore;
 
 namespace AuthService.API.Configuration;
 
@@ -21,5 +24,9 @@ public static class ServiceCollectionExtensions
         {
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "AuthService", Version = "v1" });
         });
+        
+        services.AddFluentValidationAutoValidation();
+        services.AddFluentValidationClientsideAdapters();
+        services.AddValidatorsFromAssemblyContaining<RegisterDtoValidator>();
     }
 }
