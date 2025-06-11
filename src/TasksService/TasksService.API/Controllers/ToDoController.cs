@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TasksService.Application.DTOs;
 using TasksService.Application.Interfaces;
@@ -6,6 +7,7 @@ namespace TasksService.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]  
 public class ToDoController(IToDoService toDoService) : ControllerBase
 {
     [HttpGet]
