@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# 
+#
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{99A8737D-1121-46EC-9993-DB33C66E6B65}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AuthService", "AuthService", "{9DEAF49D-92B1-4971-A3E9-94716528EDE4}"
@@ -46,6 +46,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService.API", "src\UserService\UserService.API\UserService.API.csproj", "{92E284C1-4DD1-428E-9ACF-2F1B5EB4325C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService.Application", "src\UserService\UserService.Application\UserService.Application.csproj", "{EDE405D7-070F-49E1-A089-623223FB22C2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DA4BBE51-021B-4AFE-80C6-A1CDB125B01F} = {DA4BBE51-021B-4AFE-80C6-A1CDB125B01F}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService.Domain", "src\UserService\UserService.Domain\UserService.Domain.csproj", "{DA4BBE51-021B-4AFE-80C6-A1CDB125B01F}"
 EndProject
