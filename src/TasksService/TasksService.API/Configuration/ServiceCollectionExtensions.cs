@@ -1,5 +1,6 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using TasksService.API.Infrastructure;
 using TasksService.Application.DTOs;
 using TasksService.Application.Interfaces;
 using TasksService.Application.UseCases;
@@ -34,6 +35,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<GetAllToDoItemsQueryHandler>();
         services.AddScoped<GetToDoItemByIdQueryHandler>();
         services.AddScoped<IToDoRepository, ToDoRepository>();
+        services.AddScoped<IJwtUserService, JwtUserService>();
         services.Configure<MongoDbSettings>(configuration.GetSection("MongoDbSettings"));
         services.AddSingleton<MongoDbContext>(_ =>
         {

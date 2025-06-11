@@ -60,6 +60,7 @@ builder.Services.AddSwaggerGen(c =>
     });
 });
 
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddTaskServices(builder.Configuration);
 
 var app = builder.Build();
