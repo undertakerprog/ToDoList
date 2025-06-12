@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
-using UserService.Application.Interfaces;
+using UserService.Application.UseCases.Queries.Handlers;
 using UserService.Domain.Interfaces;
 using UserService.Infrastructure.Data;
 using UserService.Infrastructure.Repositories;
@@ -13,9 +13,9 @@ public static class ServiceCollectionExtensions
     {
         services.AddDbContext<UserDbContext>(options =>
             options.UseNpgsql(configuration.GetConnectionString("AuthDb")));
-
-        services.AddScoped<IUserService, Application.UseCases.UserService>();
+        
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(GetAllUsersHandler).Assembly));
 
         services.AddSwaggerGen(c =>
         {
