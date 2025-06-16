@@ -1,7 +1,5 @@
 using MediatR;
 using UserService.Application.DTOs;
-using UserService.Application.UseCases.Queries;
-using UserService.Application.UseCases.Queries.Handlers;
 using UserService.Domain.Interfaces;
 
 namespace UserService.Application.UseCases.Commands.Handlers;
@@ -10,13 +8,22 @@ public class UpdateUserHandler(IUserRepository repository) : IRequestHandler<Upd
 {
     public async Task<UserDto> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await repository.GetByIdAsync(request.CurrentUserId);
-        if (user == null) throw new Exception("User not found");
+        Console.WriteLine($"UpdateUserHandler: id={request.Id}, currentUserId={request.CurrentUserId}");
+        var user = await repository.GetByIdAsync(int.Parse(request.Id.ToString()));
+        if (user == null) throw new Exception("User to update not found");
 
-        if (user.Id != request.CurrentUserId) throw new UnauthorizedAccessException("Only the account owner can update this user");
+        var isOwner = user.Id.ToString() == request.CurrentUserId;
+        if (!isOwner)
+            throw new UnauthorizedAccessException("Only the account owner can update this user");
 
         user.Email = request.Dto.Email;
         await repository.UpdateAsync(user);
-        return await new GetUserByIdHandler(repository).Handle(new GetUserByIdQuery(request.CurrentUserId), cancellationToken);
+        return new UserDto
+        {
+            Id = user.Id,
+            Email = user.Email,
+            Role = user.Role,
+            CreatedAt = user.CreatedAt
+        };
     }
 }

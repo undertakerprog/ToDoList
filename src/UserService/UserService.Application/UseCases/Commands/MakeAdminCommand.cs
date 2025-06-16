@@ -2,4 +2,4 @@ using MediatR;
 
 namespace UserService.Application.UseCases.Commands;
 
-public record MakeAdminCommand(int Id, int CurrentUserId) : IRequest;
+public record MakeAdminCommand(int Id, string CurrentUserId, string CurrentUserRole) : IRequest;

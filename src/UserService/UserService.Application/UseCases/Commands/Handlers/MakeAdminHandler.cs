@@ -7,10 +7,12 @@ public class MakeAdminHandler(IUserRepository repository) : IRequestHandler<Make
 {
     public async Task Handle(MakeAdminCommand request, CancellationToken cancellationToken)
     {
+        Console.WriteLine($"MakeAdminHandler: id={request.Id}, currentUserId={request.CurrentUserId}, role={request.CurrentUserRole}");
         var user = await repository.GetByIdAsync(request.Id);
         if (user == null) throw new Exception("User not found");
 
-        if (user.Id != request.CurrentUserId) throw new UnauthorizedAccessException("Only the account owner can change their role");
+        if (request.CurrentUserRole != "Admin")
+            throw new UnauthorizedAccessException("Only admins can make other users admins");
 
         user.Role = "Admin";
         await repository.UpdateAsync(user);

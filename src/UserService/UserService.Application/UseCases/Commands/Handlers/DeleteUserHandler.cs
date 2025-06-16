@@ -7,11 +7,13 @@ public class DeleteUserHandler(IUserRepository repository) : IRequestHandler<Del
 {
     public async Task Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
+        Console.WriteLine($"DeleteUserHandler: id={request.Id}, currentUserId={request.CurrentUserId}, role={request.CurrentUserRole}");
         var user = await repository.GetByIdAsync(request.Id);
         if (user == null) throw new Exception("User not found");
 
-        if (user.Id != request.CurrentUserId) throw new UnauthorizedAccessException("Only the account owner can delete this user");
+        if (request.CurrentUserRole != "Admin")
+            throw new UnauthorizedAccessException("Only admins can delete users");
 
-        await repository.DeleteAsync(request.Id);
+        await repository.DeleteAsync(user.Id);
     }
 }
